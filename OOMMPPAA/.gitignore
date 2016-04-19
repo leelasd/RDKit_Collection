@@ -1,0 +1,10 @@
+*.pyc
+*.pyo
+*.png
+*.db
+build/
+*.csv
+*.sdf
+*.spec
+dist/
+*.icb.bak

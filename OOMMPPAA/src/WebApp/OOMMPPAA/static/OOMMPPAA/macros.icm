@@ -1,0 +1,48 @@
+#>mac showshapes
+macro showshapes s_shape s_color as_atoms r_occ i_bfact r_max i_max
+  r_occ = r_occ / 10.0
+  r_max = r_max / 10.0
+  for i=1,Nof(as_atoms)
+    if (Occupancy(as_atoms[i])[1] < r_occ) then
+	  continue
+	endif
+	if (Occupancy(as_atoms[i])[1] > r_max) then
+	  continue
+	endif
+	if (Bfactor(as_atoms[i])[1] < i_bfact) then
+	  continue
+	endif
+	if (Bfactor(as_atoms[i])[1] > i_max) then
+	  continue
+	endif
+    newshape = $s_shape
+	display as_atoms[i] wire
+	# first put it to zero
+	my_trans = -Mean(Xyz(newshape))
+	translate newshape my_trans
+    translate newshape Xyz(as_atoms[i])
+	display newshape
+	color newshape $s_color
+	rename newshape Name(s_shape,unique)
+  endfor
+  keep grob
+endmacro
+
+#>mac deleteObjs
+macro deleteObjs s_shape as_atoms
+  GRAPHICS.l_redraw = no
+  undisplay as_atoms
+  for i=1,Nof(as_atoms)
+    mynewvar = s_shape+"_"+String(i)
+	delete $mynewvar
+  endfor
+  GRAPHICS.l_redraw = yes
+  display new
+endmacro
+
+#>mac colorMols
+macro colorMols as_mols
+# macro to colour molecules based on the order they come out
+  color xstick as_mols & a_*.//c* molecule 
+  set xstick as_mols 0.1
+endmacro
